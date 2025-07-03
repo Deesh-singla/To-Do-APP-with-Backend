@@ -1,18 +1,42 @@
-import { JWT_SECRET, users } from "../server.js";
+import { JWT_SECRET } from "../server.js";
 import jwt from "jsonwebtoken"
-function findUser(username, password) {
-    let user = users.find(x => x.username == username && x.password == password);
-    return user;
+import { UserModel } from "../db.js";
+import bcrypt from "bcrypt";
+import { z } from "zod"
+
+const requiredBody = z.object({
+    username: z.string().min(1, "*username is required"),
+    password: z.string().min(1, "*password is required"),
+});
+
+async function findUser(username) {
+    return await UserModel.findOne({ username });
 }
 
-function loginUser(req, res) {
-    let { username, password } = req.body;
-    let user = findUser(username, password);
-    if (user) {
-        let token = jwt.sign({ username: user.username }, JWT_SECRET)
-        res.json({ token: token })
+async function verifyPass(user, password) {
+    return await bcrypt.compare(password, user.password);
+}
+
+async function loginUser(req, res) {
+
+    const parsed = requiredBody.safeParse(req.body);
+    if (!parsed.success) {
+        return res.json({ error: parsed.error.issues[0].message });
     }
-    else res.json({ error: "*wrong username or password" })
+
+    let { username, password } = parsed.data;
+    try {
+        let user = await findUser(username);
+
+        if (user && await verifyPass(user, password)) {
+            let token = jwt.sign({ id: user._id }, JWT_SECRET)
+            return res.json({ token: token })
+        }
+
+        else return res.json({ error: "*wrong username or password" })
+    } catch (err) {
+        return res.status(500).json({ error: "*internal server error" });
+    }
 
 }
 export { loginUser }

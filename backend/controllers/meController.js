@@ -1,19 +1,16 @@
-import {JWT_SECRET, users} from "../server.js"
-import jwt from "jsonwebtoken"
+import { UserModel } from "../db.js";
 
-function getDataFromMemory(username){
-    const user=users.find(x=>x.username==username);
-    return user;
+async function getData(id) {
+    return await UserModel.findOne({ _id: id });
 }
-function userData(req, res) {
-    try{
-    let token=req.headers.authorization;
-    let data=jwt.verify(token,JWT_SECRET);  
-    let user=getDataFromMemory(data.username);  
-    res.json(user);
+async function userData(req, res) {
+    try {
+        const { id } = req.user
+        let user = await getData(id);
+        res.json(user);
     }
-    catch(err){
-        res.json({err:"something went wrong"})
+    catch (err) {
+        res.json({ err: "something went wrong" })
     }
 }
 export { userData };
