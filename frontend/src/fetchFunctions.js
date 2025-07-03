@@ -1,5 +1,5 @@
 let fetchData = async (endpoint, data, method) => {
-    let res = await fetch(endpoint, {
+    let res = await fetch(`https://to-do-app-with-backend.onrender.com${endpoint}`, {
         method: method,
         headers: {
             "content-type": "application/json",
@@ -11,7 +11,7 @@ let fetchData = async (endpoint, data, method) => {
 }
 let deleteTodo = async (id, setUserData) => {
     let token = localStorage.getItem("token");
-    let res = await fetch(`/todo/${id}`, {
+    let res = await fetch(`https://to-do-app-with-backend.onrender.com/todo/${id}`, {
         method: "delete",
         headers: {
             "authorization": token,
@@ -22,7 +22,7 @@ let deleteTodo = async (id, setUserData) => {
 }
 let updateTodo = async (id, setUserData, updatedTask) => {
     let token = localStorage.getItem("token");
-    let res = await fetch(`/todo/${id}`, {
+    let res = await fetch(`https://to-do-app-with-backend.onrender.com/todo/${id}`, {
         method: "put",
         headers: {
             "authorization": token,
@@ -35,7 +35,7 @@ let updateTodo = async (id, setUserData, updatedTask) => {
 }
 let addTodo = async (newTask, setUserData) => {
     let token = localStorage.getItem("token");
-    let res = await fetch(`/todo`, {
+    let res = await fetch(`https://to-do-app-with-backend.onrender.com/todo`, {
         method: "post",
         headers: {
             "authorization": token,
@@ -48,7 +48,7 @@ let addTodo = async (newTask, setUserData) => {
 }
 let taskCompleted = async (e, id, setUserData) => {
     let token = localStorage.getItem("token");
-    let res = await fetch(`/todo/toggle/${id}`, {
+    let res = await fetch(`https://to-do-app-with-backend.onrender.com/todo/toggle/${id}`, {
         method: "post",
         headers: {
             "authorization": token,

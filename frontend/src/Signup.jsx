@@ -3,6 +3,7 @@ import { fetchData } from "./fetchFunctions";
 
 export default function Signup() {
   const [formData, setFormData] = useState({});
+  const [loading, setLoading] = useState(false);
   const [res, setRes] = useState({})
   function changeEventHandler(e) {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
@@ -13,8 +14,10 @@ export default function Signup() {
       setRes({ error: "*Please fill all fields" });
       return;
     }
+    setLoading(true);
     let response = await fetchData("/signup", formData, "post");
     setRes(response);
+    setLoading(false);
   }
   return (
     <form>
@@ -24,7 +27,7 @@ export default function Signup() {
       <div>
         <input type="password" className="password" placeholder="Password" name="password" onChange={(e) => changeEventHandler(e)} required />
       </div>
-      <button type="submit" onClick={(e) => handleClick(e)} className={"method-btn"}>Signup</button>
+      <button type="submit" onClick={(e) => handleClick(e)}>{loading ? "loading ..." : "Signup"}</button>
       {res.message ? <p>{res.message}</p> : <p style={{ color: "red" }}>{res.error}</p>}
     </form>
   )

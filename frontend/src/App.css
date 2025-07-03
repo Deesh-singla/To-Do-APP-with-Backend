@@ -14,7 +14,7 @@ html, body, #root {
 .app-header {
   background-color: #007bff;
   color: white;
-  padding: 5px;
+  padding: 10px;
   text-align: center;
 }
 
@@ -240,8 +240,5 @@ html, body, #root {
     font-size: large;
     border-radius: 8px;
     padding: 6px 8px;
-    cursor: pointer;
-}
-.method-btn{
     cursor: pointer;
 }
